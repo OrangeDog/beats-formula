@@ -11,10 +11,13 @@ add_elastic_repository:
         - name: apt-transport-https
 
     pkgrepo.{{ repo_state }}:
-        - name: deb https://artifacts.elastic.co/packages/{{ version }}.x/apt stable main
+        - name: >
+            deb [arch={{ grains['osarch'] }} signed-by=/etc/apt/keyrings/elastic-archive-keyring.gpg]
+            https://artifacts.elastic.co/packages/{{ version }}.x/apt stable main
         - file: /etc/apt/sources.list.d/elastic.list
         - gpgcheck: 1
         - key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        - aptkey: false
         - clean_file: true
         - require:
             - pkg: apt-transport-https
